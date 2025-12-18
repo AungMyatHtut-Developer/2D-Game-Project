@@ -1,42 +1,38 @@
 package com.game.window;
 
+import com.game.asset_helper.SpriteLoader;
+import com.game.entity.Player;
+
 import java.awt.*;
 
 public class GameWorld {
 
     //TODO Players, Enemies, Env Obj, Trees
 
-    int speed = 5;
-    int x = 0, y = 0;
+    private SpriteLoader spriteLoader;
+    private Player player;
 
     public GameWorld() {
+        init();
+    }
 
+    public void init() {
+        spriteLoader = new SpriteLoader();
+        player = new Player(10,10, 32,32, spriteLoader );
     }
 
     public void render(Graphics graphics) {
-        graphics.setColor(Color.blue);
-        graphics.fillRect(x,y, 50,50);
 
         // -> player.render(g); enemy.render(g)
+        player.render(graphics);
     }
 
     public void update(float deltaTime) {
         //TODO to add player and enemy update logics
+        player.update(deltaTime);
     }
 
-    public void up() {
-        y -= speed;
-    }
-
-    public void down() {
-        y += speed;
-    }
-
-    public void left() {
-        x -= speed;
-    }
-
-    public void right() {
-        x += speed;
+    public Player getPlayer() {
+        return player;
     }
 }
