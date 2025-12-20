@@ -27,6 +27,7 @@ public class KeyboardHandler implements KeyListener {
             case KeyEvent.VK_DOWN -> gameWorld.getPlayer().isDown(true);
             case KeyEvent.VK_LEFT -> gameWorld.getPlayer().isLeft(true);
             case KeyEvent.VK_RIGHT -> gameWorld.getPlayer().isRight(true);
+            case KeyEvent.VK_D -> gameWorld.getPlayer().dead(true);
         }
     }
 

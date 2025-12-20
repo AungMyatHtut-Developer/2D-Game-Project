@@ -1,6 +1,6 @@
 package com.game.entity;
 
-import com.game.asset_helper.ActionStore;
+import static com.game.asset_helper.ActionStore.*;
 import com.game.asset_helper.SpriteLoader;
 
 import java.awt.*;
@@ -10,16 +10,20 @@ public class Player implements Character {
 
     private Color color;
     private float x, y, width, height;
-    private float movementSpeed = 100f;
+    private float movementSpeed = 230f;
     private boolean isLeft, isRight, isUP, isDown;
     private boolean isMoving = false;
-    private boolean isFacingLeft = true;
+    private boolean isFacingLeft = false;
     private boolean isDead = false;
     private float scale = 2.0f;
-
+    private PlayerAction playerAction;
     private final SpriteLoader spriteLoader;
+    private int animationIndex;
+    private int animationTick;
+    private boolean isFinalDead;
 
     public Player(float x, float y, float width, float height, SpriteLoader spriteLoader) {
+        playerAction = PlayerAction.IDLE_RIGHT;
         this.spriteLoader = spriteLoader;
         this.color = Color.RED;
         this.x = x;
@@ -28,50 +32,107 @@ public class Player implements Character {
         this.height = height;
     }
 
-    int animationCount = 0;
-    int i = 0;
+    public BufferedImage[] getCurrentActionAnimationFrames() {
+        return spriteLoader.getPlayerSprites(playerAction);
+    }
+
+    public float getCurrentAnimationSpeed() {
+        return playerAction.getFrameSpeed();
+    }
 
     @Override
     public void render(Graphics g) {
-        g.setColor(color);
-        g.fillRect((int) x, (int) y, (int) width, (int) height);
+        if(isFinalDead) return;
 
-        BufferedImage[] image = spriteLoader.getPlayerSprites(ActionStore.PlayerAction.IDLE_LEFT);
-
-        g.drawImage(image[i], (int) x, (int) y, (int) (width * scale), (int) (height * scale), null);
-
-        if (animationCount > 40) {
-            if (i > 3) {
-                i = 0;
-            } else {
-                i++;
-            }
-            animationCount = 0;
-        } else {
-            animationCount++;
-        }
-
+        BufferedImage[] frames = getCurrentActionAnimationFrames();
+        g.drawImage(frames[animationIndex], (int) x, (int) y, (int) (width * scale), (int) (height * scale), null);
     }
 
     @Override
     public void update(float deltaTime) {
         move(deltaTime);
+        updatePlayerAction();
+        animatePlayer();
+    }
+
+    private void changePlayerAction(PlayerAction playerAction) {
+        if(this.playerAction == playerAction) return;
+        animationIndex = 0;
+        this.playerAction = playerAction;
+    }
+
+    private void updatePlayerAction() {
+
+        if (isDead) {
+            changePlayerAction(PlayerAction.DIE);
+            return;
+        }
+
+        if (isDown && isMoving) {
+            changePlayerAction(PlayerAction.WALK_DOWN);
+            return;
+        } else if (isUP && isMoving) {
+            changePlayerAction(PlayerAction.WALK_UP);
+            return;
+        }
+
+        if(isFacingLeft && isMoving) {
+            changePlayerAction(PlayerAction.WALK_LEFT);
+            return;
+        } else if (!isFacingLeft && isMoving){
+            changePlayerAction(PlayerAction.WALK_RIGHT);
+            return;
+        }
+
+        if(isFacingLeft) {
+            changePlayerAction(PlayerAction.IDLE_LEFT);
+        }else{
+            changePlayerAction(PlayerAction.IDLE_RIGHT);
+        }
+    }
+
+    public void animatePlayer() {
+        if(animationTick > getCurrentAnimationSpeed()) {
+            animationIndex++;
+            if(animationIndex >= playerAction.getFrameCount()){
+                if(animationIndex == 10 && isDead){
+                    animationIndex = 9;
+                    isFinalDead = true;
+                }else{
+                    animationIndex = 0;
+                }
+            }
+            animationTick = 0;
+        }else{
+            animationTick++;
+        }
     }
 
     public void move(float deltaTime) {
+        isMoving = false;
+        if (isDead) {
+            return;
+        }
 
         //TODO to calculate diagonal movement
         if (isLeft && !isRight) {
             x -= movementSpeed * deltaTime;
+            isFacingLeft = true;
+            isMoving = true;
         } else if (isRight && !isLeft) {
             x += movementSpeed * deltaTime;
+            isFacingLeft = false;
+            isMoving = true;
         }
 
         if (isUP && !isDown) {
             y -= movementSpeed * deltaTime;
+            isMoving = true;
         } else if (isDown && !isUP) {
             y += movementSpeed * deltaTime;
+            isMoving = true;
         }
+
     }
 
     public void isLeft(boolean isLeft) {
@@ -90,11 +151,8 @@ public class Player implements Character {
         this.isDown = isDown;
     }
 
-    public void stopMovements() {
-        this.isLeft = false;
-        this.isRight = false;
-        this.isUP = false;
-        this.isDown = false;
+    public void dead(boolean isDead) {
+        this.isDead = isDead;
     }
 
 }

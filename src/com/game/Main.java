@@ -11,4 +11,5 @@ public class Main {
 /*
 1. Create Project, Add Game Screens and Simple Game Loop with simple block movement
 2. Added Player Class, Player Simple Movements and Player simple animation
+3. Added Player Movement Animations, Dead Animation and Added Player Movement and Dead Game Logics
 */
