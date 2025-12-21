@@ -10,8 +10,8 @@ public class Player implements Character {
 
     private Color color;
     private float x, y, width, height;
-    private float movementSpeed = 230f;
-    private boolean isLeft, isRight, isUP, isDown;
+    private float baseSpeed = 230f;
+    private boolean isLeft, isRight, isUp, isDown;
     private boolean isMoving = false;
     private boolean isFacingLeft = false;
     private boolean isDead = false;
@@ -71,7 +71,7 @@ public class Player implements Character {
         if (isDown && isMoving) {
             changePlayerAction(PlayerAction.WALK_DOWN);
             return;
-        } else if (isUP && isMoving) {
+        } else if (isUp && isMoving) {
             changePlayerAction(PlayerAction.WALK_UP);
             return;
         }
@@ -115,6 +115,13 @@ public class Player implements Character {
         }
 
         //TODO to calculate diagonal movement
+        float movementSpeed = 0;
+        if((isLeft && isUp) || (isLeft && isDown) || (isRight && isUp) || (isRight && isDown)) {
+           movementSpeed = (float) (baseSpeed / Math.sqrt(2));
+        }else{
+            movementSpeed = baseSpeed;
+        }
+
         if (isLeft && !isRight) {
             x -= movementSpeed * deltaTime;
             isFacingLeft = true;
@@ -125,10 +132,10 @@ public class Player implements Character {
             isMoving = true;
         }
 
-        if (isUP && !isDown) {
+        if (isUp && !isDown) {
             y -= movementSpeed * deltaTime;
             isMoving = true;
-        } else if (isDown && !isUP) {
+        } else if (isDown && !isUp) {
             y += movementSpeed * deltaTime;
             isMoving = true;
         }
@@ -144,7 +151,7 @@ public class Player implements Character {
     }
 
     public void isUp(boolean isUP) {
-        this.isUP = isUP;
+        this.isUp = isUP;
     }
 
     public void isDown(boolean isDown) {
