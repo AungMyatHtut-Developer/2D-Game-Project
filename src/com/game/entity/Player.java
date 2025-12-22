@@ -46,6 +46,8 @@ public class Player implements Character {
 
         BufferedImage[] frames = getCurrentActionAnimationFrames();
         g.drawImage(frames[animationIndex], (int) x, (int) y, (int) (width * scale), (int) (height * scale), null);
+
+        drawHitBox(g);
     }
 
     @Override
@@ -54,6 +56,12 @@ public class Player implements Character {
         updatePlayerAction();
         animatePlayer();
     }
+
+    private void drawHitBox(Graphics g) {
+        g.setColor(Color.RED);
+        g.drawRect((int) x + 20, (int) y + 15, (int) ( width * scale) - 43, (int) (height * scale) - 25);
+    }
+
 
     private void changePlayerAction(PlayerAction playerAction) {
         if(this.playerAction == playerAction) return;
@@ -160,6 +168,10 @@ public class Player implements Character {
 
     public void dead(boolean isDead) {
         this.isDead = isDead;
+    }
+
+    public int getPlayerDepth() {
+        return (int) ( (y + 15) +  ((height * scale) - 25)  );
     }
 
 }

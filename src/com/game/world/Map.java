@@ -2,10 +2,12 @@ package com.game.world;
 
 import com.game.asset_helper.SpriteLoader;
 
-import java.awt.*;
+import java.awt.Graphics;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.List;
+import java.util.ArrayList;
 
 public class Map {
 
@@ -19,11 +21,26 @@ public class Map {
     int mapNumber = 1;
     int[][] background;
     int[][] grass;
+    List<Grass> grassList;
 
     public Map(SpriteLoader spriteLoader) {
+        grassList = new ArrayList<>();
         this.spriteLoader = spriteLoader;
         background = loadMapData("background");
         grass = loadMapData("grass");
+
+        for(int i = 0; i < grass.length; i++) {
+            for(int j = 0; j < grass[i].length; j++) {
+                grassList.add(new Grass(
+                        (int) (i * MAP_SPRITE_WIDTH),
+                        (int) (j * MAP_SPRITE_HEIGHT),
+                        grass[i][j],
+                        (int) ((j * MAP_SPRITE_HEIGHT) + MAP_SPRITE_HEIGHT),
+                        (int) MAP_SPRITE_WIDTH,
+                        (int) MAP_SPRITE_HEIGHT
+                ));
+            }
+        }
     }
 
 
@@ -70,16 +87,20 @@ public class Map {
             }
         }
 
-        for(int j = 0; j < grass.length; j++) {
-            for(int i = 0; i < grass[j].length; i++) {
-                int index = grass[j][i];
-                if (index < 0) {
-                    continue;
-                }
-                graphics.drawImage(spriteLoader.getMapSpriteByIndex(index),
-                        (int) (i * MAP_SPRITE_WIDTH), (int) (j * MAP_SPRITE_HEIGHT), (int) MAP_SPRITE_WIDTH, (int) MAP_SPRITE_HEIGHT, null);
-            }
-        }
+//        for(int j = 0; j < grass.length; j++) {
+//            for(int i = 0; i < grass[j].length; i++) {
+//                int index = grass[j][i];
+//                if (index < 0) {
+//                    continue;
+//                }
+//                graphics.drawImage(spriteLoader.getMapSpriteByIndex(index),
+//                        (int) (i * MAP_SPRITE_WIDTH), (int) (j * MAP_SPRITE_HEIGHT), (int) MAP_SPRITE_WIDTH, (int) MAP_SPRITE_HEIGHT, null);
+//            }
+//        }
 
+    }
+
+    public List<Grass> getGrassList() {
+        return grassList;
     }
 }
