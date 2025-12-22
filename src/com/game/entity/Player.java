@@ -10,7 +10,7 @@ public class Player implements Character {
 
     private Color color;
     private float x, y, width, height;
-    private float baseSpeed = 230f;
+    private float baseSpeed = 4.0f;
     private boolean isLeft, isRight, isUp, isDown;
     private boolean isMoving = false;
     private boolean isFacingLeft = false;
@@ -49,8 +49,8 @@ public class Player implements Character {
     }
 
     @Override
-    public void update(float deltaTime) {
-        move(deltaTime);
+    public void update() {
+        move();
         updatePlayerAction();
         animatePlayer();
     }
@@ -108,7 +108,7 @@ public class Player implements Character {
         }
     }
 
-    public void move(float deltaTime) {
+    public void move() {
         isMoving = false;
         if (isDead) {
             return;
@@ -123,20 +123,20 @@ public class Player implements Character {
         }
 
         if (isLeft && !isRight) {
-            x -= movementSpeed * deltaTime;
+            x -= movementSpeed;
             isFacingLeft = true;
             isMoving = true;
         } else if (isRight && !isLeft) {
-            x += movementSpeed * deltaTime;
+            x += movementSpeed;
             isFacingLeft = false;
             isMoving = true;
         }
 
         if (isUp && !isDown) {
-            y -= movementSpeed * deltaTime;
+            y -= movementSpeed;
             isMoving = true;
         } else if (isDown && !isUp) {
-            y += movementSpeed * deltaTime;
+            y += movementSpeed;
             isMoving = true;
         }
 

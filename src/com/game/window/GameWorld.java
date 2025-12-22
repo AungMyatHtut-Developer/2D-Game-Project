@@ -31,9 +31,9 @@ public class GameWorld {
         player.render(graphics);
     }
 
-    public void update(float deltaTime) {
+    public void update() {
         //TODO to add player and enemy update logics
-        player.update(deltaTime);
+        player.update();
     }
 
     public Player getPlayer() {

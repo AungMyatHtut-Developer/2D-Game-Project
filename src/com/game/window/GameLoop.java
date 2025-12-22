@@ -38,19 +38,32 @@ public class GameLoop implements Runnable {
     @Override
     public void run() {
 
-        long lastTime = System.nanoTime();
+        long targetFPS = 1_000_000_000/60;  // 60 -> 1B
+        long startFPSTime = 0;
+        long lastFPSCheckTime = 0;
+
+        long targetUPS = 1_000_000_000/60;  // 60 -> 1B
+        long startUPSTime = 0;
+        long lastUPSCheckTime = 0;
+
         long timer = System.currentTimeMillis();
         int frames = 0;
 
         while (running) {
-            long now = System.nanoTime();
-            float delta  = (now - lastTime) / 1_000_000_000.0f;
-            lastTime = now;
 
-            update(delta);
-            render();
+            startFPSTime = System.nanoTime();
+            if(startFPSTime - lastFPSCheckTime >= targetFPS) {
+                render();
+                lastFPSCheckTime = startFPSTime;
+                frames++;
+            }
 
-            frames++;
+            startUPSTime = System.nanoTime();
+            if(startUPSTime - lastUPSCheckTime >= targetUPS) {
+                update();
+                lastUPSCheckTime = startUPSTime;
+            }
+
             if(System.currentTimeMillis() - timer > 1_000){
                 System.out.println("FPS : "+ frames);
                 frames = 0;
@@ -59,8 +72,8 @@ public class GameLoop implements Runnable {
         }
     }
 
-    public void update(float delta) {
-        gameWorld.update(delta);
+    public void update() {
+        gameWorld.update();
     }
 
     public void render() {
