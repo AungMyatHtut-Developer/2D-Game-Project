@@ -15,4 +15,5 @@ public class Main {
 4. Normalize Player Diagonal Movement, Added Game Environment and Map
 5. Game Loop Refix and Modified Player Animation Delays to align with 60 FPS\
 6. Added YSorting algorithm for Grass and Player
+7. Adding Player ViewPort(Camera) with Game World
 */

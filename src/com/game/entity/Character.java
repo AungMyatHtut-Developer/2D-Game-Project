@@ -3,6 +3,7 @@ package com.game.entity;
 import java.awt.*;
 
 public interface Character {
-    void render(Graphics g);
+    default void render(Graphics g){};
+    void render(Graphics g, int camX, int camY);
     void update();
 }

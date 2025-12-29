@@ -8,10 +8,10 @@ public class GameConstants {
 
     public static final int TILE_WIDTH = 32;
     public static final int TILE_HEIGHT = 32;
-    public static final int MAP_WIDTH = 25;
-    public static final int MAP_HEIGHT = 15;
-    public static final int GAME_WIDTH = TILE_WIDTH * MAP_WIDTH;
-    public static final int GAME_HEIGHT = TILE_HEIGHT * MAP_HEIGHT;
+    public static final int MAP_WIDTH = 20;
+    public static final int MAP_HEIGHT = 10;
+    public static final int GAME_WIDTH = TILE_WIDTH * MAP_WIDTH;//Screen Width
+    public static final int GAME_HEIGHT = TILE_HEIGHT * MAP_HEIGHT;//Screen Height
 
 
 }

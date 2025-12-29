@@ -17,6 +17,8 @@ public class Map {
     private static final float SCALE = 2.0f;
     private static final float MAP_SPRITE_WIDTH = 16 * SCALE;
     private static final float MAP_SPRITE_HEIGHT = 16 * SCALE;
+    private float MAP_WIDTH;
+    private float MAP_HEIGHT;
 
     int mapNumber = 1;
     int[][] background;
@@ -41,6 +43,9 @@ public class Map {
                 ));
             }
         }
+
+        MAP_WIDTH = background[0].length * MAP_SPRITE_WIDTH;//columns
+        MAP_HEIGHT = background.length * MAP_SPRITE_HEIGHT;//rows
     }
 
 
@@ -74,7 +79,7 @@ public class Map {
         return map;
     }
 
-    public void render(Graphics graphics) {
+    public void render(Graphics graphics, int camX, int camY) {
 
         for(int j = 0; j < background.length; j++) {
             for(int i = 0; i < background[j].length; i++) {
@@ -83,24 +88,22 @@ public class Map {
                     continue;
                 }
                 graphics.drawImage(spriteLoader.getMapSpriteByIndex(index),
-                        (int) (i * MAP_SPRITE_WIDTH), (int) (j * MAP_SPRITE_HEIGHT), (int) MAP_SPRITE_WIDTH, (int) MAP_SPRITE_HEIGHT, null);
+                        (int) (i * MAP_SPRITE_WIDTH - camX),
+                        (int) (j * MAP_SPRITE_HEIGHT - camY),
+                        (int) MAP_SPRITE_WIDTH, (int) MAP_SPRITE_HEIGHT, null);
             }
         }
-
-//        for(int j = 0; j < grass.length; j++) {
-//            for(int i = 0; i < grass[j].length; i++) {
-//                int index = grass[j][i];
-//                if (index < 0) {
-//                    continue;
-//                }
-//                graphics.drawImage(spriteLoader.getMapSpriteByIndex(index),
-//                        (int) (i * MAP_SPRITE_WIDTH), (int) (j * MAP_SPRITE_HEIGHT), (int) MAP_SPRITE_WIDTH, (int) MAP_SPRITE_HEIGHT, null);
-//            }
-//        }
-
     }
 
     public List<Grass> getGrassList() {
         return grassList;
+    }
+
+    public float getMAP_WIDTH() {
+        return MAP_WIDTH;
+    }
+
+    public float getMAP_HEIGHT() {
+        return MAP_HEIGHT;
     }
 }

@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public class Player implements Character {
 
-    private Color color;
     private float x, y, width, height;
     private float baseSpeed = 4.0f;
     private boolean isLeft, isRight, isUp, isDown;
@@ -25,7 +24,6 @@ public class Player implements Character {
     public Player(float x, float y, float width, float height, SpriteLoader spriteLoader) {
         playerAction = PlayerAction.IDLE_RIGHT;
         this.spriteLoader = spriteLoader;
-        this.color = Color.RED;
         this.x = x;
         this.y = y;
         this.width = width;
@@ -41,13 +39,13 @@ public class Player implements Character {
     }
 
     @Override
-    public void render(Graphics g) {
+    public void render(Graphics g, int camX, int camY) {
         if(isFinalDead) return;
 
         BufferedImage[] frames = getCurrentActionAnimationFrames();
-        g.drawImage(frames[animationIndex], (int) x, (int) y, (int) (width * scale), (int) (height * scale), null);
+        g.drawImage(frames[animationIndex], (int) (x - camX) , (int) (y - camY), (int) (width * scale), (int) (height * scale), null);
 
-        drawHitBox(g);
+        drawHitBox(g, camX, camY);
     }
 
     @Override
@@ -57,9 +55,9 @@ public class Player implements Character {
         animatePlayer();
     }
 
-    private void drawHitBox(Graphics g) {
+    private void drawHitBox(Graphics g, int camX, int camY) {
         g.setColor(Color.RED);
-        g.drawRect((int) x + 20, (int) y + 15, (int) ( width * scale) - 43, (int) (height * scale) - 25);
+        g.drawRect((int) x + 20 - camX, (int) y + 15 - camY, (int) ( width * scale) - 43, (int) (height * scale) - 25);
     }
 
 
@@ -174,4 +172,20 @@ public class Player implements Character {
         return (int) ( (y + 15) +  ((height * scale) - 25)  );
     }
 
+
+    public float getX() {
+        return x;
+    }
+
+    public float getY() {
+        return y;
+    }
+
+    public float getWidth() {
+        return width;
+    }
+
+    public float getHeight() {
+        return height;
+    }
 }
