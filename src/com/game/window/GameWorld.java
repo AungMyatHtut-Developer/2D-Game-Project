@@ -2,6 +2,7 @@ package com.game.window;
 
 import com.game.asset_helper.SpriteLoader;
 import com.game.entity.Player;
+import com.game.game_screens.PauseScreen;
 import com.game.helpers.Camera;
 import com.game.world.Grass;
 import com.game.world.Map;
@@ -16,11 +17,17 @@ import static com.game.constants.GameConstants.*;
 public class GameWorld {
 
     //TODO Players, Enemies, Env Obj, Trees
+    private PauseScreen pauseScreen;
 
     private SpriteLoader spriteLoader;
     private Map map;
     private Player player;
     private Camera camera;
+
+    private boolean isPaused;
+    private int mouseX, mouseY;
+    private boolean isClicked;
+    private boolean isReleased;
 
     public GameWorld() {
         init();
@@ -28,13 +35,13 @@ public class GameWorld {
 
     public void init() {
         spriteLoader = new SpriteLoader();
+        pauseScreen = new PauseScreen(0,0, GAME_WIDTH, GAME_HEIGHT, this);
         map = new Map(spriteLoader);
         camera = new Camera(GAME_WIDTH, GAME_HEIGHT, (int) map.getMAP_WIDTH(), (int) map.getMAP_HEIGHT());
         player = new Player(10, 10, 32, 32, spriteLoader);
     }
 
     public void render(Graphics graphics) {
-
         // -> player.render(g); enemy.render(g)
         int camX = (int) camera.getX();
         int camY = (int) camera.getY();
@@ -65,6 +72,10 @@ public class GameWorld {
             }
         }
 
+        if(isPaused) {
+            pauseScreen.render(graphics);
+        }
+
     }
 
     public Comparator<Object> ySortComparator() {
@@ -79,12 +90,41 @@ public class GameWorld {
     }
 
     public void update() {
-        //TODO to add player and enemy update logics
-        player.update();
-        camera.follow(player);
+        if(isPaused){
+            pauseScreen.updateButtons(mouseX, mouseY, isClicked, isReleased);
+        }else{
+            //TODO to add player and enemy update logics
+            player.update();
+            camera.follow(player);
+        }
+
+        isClicked = false;
+        isReleased = false;
+
     }
 
     public Player getPlayer() {
         return player;
+    }
+
+    public void pause() {
+        isPaused = !isPaused;
+    }
+
+    public void updateButtons(int mouseX, int mouseY) {
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+    }
+
+    public void clickButton(boolean isClicked) {
+        this.isClicked = isClicked;
+    }
+
+    public void resumeGame() {
+        isPaused = false;
+    }
+
+    public void releaseButton(boolean isReleased) {
+        this.isReleased = isReleased;
     }
 }
